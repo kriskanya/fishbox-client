@@ -1,0 +1,19 @@
+{
+  "name": "fishbox-client",
+  "version": "0.0.1",
+  "description": "Client for FishBox",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rjferguson21/fishbox-client.git"
+  },
+  "author": "Rob Ferguson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rjferguson21/fishbox-client/issues"
+  },
+  "homepage": "https://github.com/rjferguson21/fishbox-client"
+}
