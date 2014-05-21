@@ -1,5 +1,4 @@
 *.coffee
 .git*
 Cakefile
-src/
 test/
