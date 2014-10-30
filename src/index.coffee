@@ -58,7 +58,7 @@ get_link_poll = (handle, subject, contains_text, attempts=0) ->
     .then (email) ->
       link.resolve email
     , (error) ->
-      if error is 'no_matching_email'
+      if error is 'no_matching_email' || error is '404'
         setTimeout ->
           link.resolve get_link_poll(handle, subject, contains_text, attempts)
         , 4000
