@@ -33,9 +33,10 @@ get_link = (handle, subject, contains_text) ->
   link_text = q.defer()
 
   gn.get_email(handle).then (data) ->
+    mailbox = data
 
-    if data.subject is subject
-      return data.html
+    if mailbox.length > 0 && mailbox[0].subject is subject
+      return mailbox[0].html
     else
       link_text.reject 'no_matching_email'
   .then (html) ->
