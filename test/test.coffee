@@ -11,8 +11,12 @@ fb.set_fish_box('http://localhost:3000')
 #  #   console.log message
 
 
-fb.get_link_poll('forgot', 'NextGxDx Password Reset', 'reset')
-.then (message) ->
-  console.log message
-, (error) ->
-  console.log error
+# fb.get_link_poll('forgot', 'NextGxDx Password Reset', 'reset')
+# .then (message) ->
+#   console.log message
+# , (error) ->
+#   console.log error
+
+fb.clear_inbox 'forgot'
+.then (data) ->
+  console.log data

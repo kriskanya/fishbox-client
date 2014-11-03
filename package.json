@@ -4,20 +4,18 @@
   "description": "Client for FishBox",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "./node_modules/coffee-script/bin/cake build"
   },
   "dependencies": {
-    "request": "~2.31.0",
-    "q": "~1.0.0",
     "cheerio": "~0.13.1",
+    "lodash": "~2.4.1",
+    "q": "~1.0.0",
+    "q-io": "^1.11.5",
     "repeat": "0.0.6",
-    "lodash": "~2.4.1"
+    "request": "~2.31.0"
   },
   "devDependencies": {
     "coffee-script": "*"
-  },
-  "scripts": {
-    "prepublish": "./node_modules/coffee-script/bin/cake build"
   },
   "directories": {
     "lib": "./lib"

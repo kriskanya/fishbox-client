@@ -3,6 +3,8 @@ q = require 'q'
 request = require 'request'
 _ = require 'lodash'
 cheerio = require 'cheerio'
+HTTP = require "q-io/http"
+
 
 FISH_BOX = 'DEFAULT_URL'
 
@@ -70,10 +72,20 @@ get_link_poll = (handle, subject, contains_text, attempts=0) ->
 
   return link.promise
 
+clear_inbox = (handle) ->
+  HTTP.request
+    url: "#{FISH_BOX}/#{handle}"
+    method: 'DELETE'
+  .then (rsp) ->
+    rsp.body.read()
+  .then (data) ->
+    data.toString 'utf-8'
+
 gn = {
   get_email
   get_link_poll
   set_fish_box
+  clear_inbox
 }
 
 module.exports = gn
