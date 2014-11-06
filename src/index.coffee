@@ -56,7 +56,7 @@ get_link_poll = (handle, subject, contains_text, attempts=0) ->
 
   attempts = attempts + 1
 
-  if attempts < 6
+  if attempts < 10
     get_link(handle, subject, contains_text)
     .then (email) ->
       link.resolve email
@@ -64,7 +64,7 @@ get_link_poll = (handle, subject, contains_text, attempts=0) ->
       if error is 'no_matching_email' || error is '404'
         setTimeout ->
           link.resolve get_link_poll(handle, subject, contains_text, attempts)
-        , 4000
+        , 6000
       else
         link.reject error
   else
