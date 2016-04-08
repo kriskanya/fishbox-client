@@ -7,6 +7,7 @@
     "prepublish": "./node_modules/coffee-script/bin/cake build"
   },
   "dependencies": {
+    "bluebird": "~3.3.4",
     "cheerio": "~0.13.1",
     "lodash": "~2.4.1",
     "q": "~1.0.0",

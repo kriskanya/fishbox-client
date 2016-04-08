@@ -1,3 +1,4 @@
+Promise = require 'bluebird'
 qs = require 'querystring'
 q = require 'q'
 request = require 'request'
@@ -5,11 +6,16 @@ _ = require 'lodash'
 cheerio = require 'cheerio'
 HTTP = require "q-io/http"
 
+a = undefined
+# fb.set_fish_box('http://fishbox.nxtgd.net')
 
 FISH_BOX = 'DEFAULT_URL'
 
 set_fish_box = (fish_box) ->
   FISH_BOX = fish_box
+
+get_fish_box = ->
+  FISH_BOX
 
 make_request = (url) ->
 
@@ -28,6 +34,29 @@ make_request = (url) ->
 get_email = (handle) ->
 
   return make_request FISH_BOX + "/#{handle}"
+
+get_content = (handle, subject, contains_text) ->
+  gn.set_fish_box('http://fishbox.nxtgd.net')
+
+  body_text = q.defer()
+  gn.get_email(handle).then (data) ->
+    mailbox = data
+    console.log(mailbox[0].html)
+    console.log(mailbox.length, mailbox[0].subject)
+
+    if mailbox.length > 0 && mailbox[0].subject is subject
+      return mailbox[0].html
+    else
+      body_text.reject 'no_matching_email'
+  .then (html) ->
+    $ = cheerio.load(html)
+    # console.log $("body:contains(#{contains_text})").text()
+    body_text.resolve $("body:contains(#{contains_text})").text()
+
+  , (error) ->
+    body_text.reject error
+
+  return body_text.promise
 
 # helper functions
 get_link = (handle, subject, contains_text) ->
@@ -82,9 +111,11 @@ clear_inbox = (handle) ->
     data.toString 'utf-8'
 
 gn = {
+  get_content
   get_email
   get_link_poll
   set_fish_box
+  get_fish_box
   clear_inbox
 }
 
