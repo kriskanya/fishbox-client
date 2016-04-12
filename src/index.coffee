@@ -35,14 +35,11 @@ get_email = (handle) ->
 
   return make_request FISH_BOX + "/#{handle}"
 
-get_content = (handle, subject, contains_text) ->
-  gn.set_fish_box('http://fishbox.nxtgd.net')
-
+get_body = (handle, subject, contains_text) ->
   body_text = q.defer()
+
   gn.get_email(handle).then (data) ->
     mailbox = data
-    console.log(mailbox[0].html)
-    console.log(mailbox.length, mailbox[0].subject)
 
     if mailbox.length > 0 && mailbox[0].subject is subject
       return mailbox[0].html
@@ -50,13 +47,34 @@ get_content = (handle, subject, contains_text) ->
       body_text.reject 'no_matching_email'
   .then (html) ->
     $ = cheerio.load(html)
-    # console.log $("body:contains(#{contains_text})").text()
     body_text.resolve $("body:contains(#{contains_text})").text()
 
   , (error) ->
     body_text.reject error
 
   return body_text.promise
+
+get_content = (handle, subject, contains_text, attempts=0) ->
+  gn.set_fish_box('http://fishbox.nxtgd.net')
+
+  link = q.defer()
+  attempts += 1
+
+  if attempts < 15
+    get_body(handle, subject, contains_text)
+    .then (email) ->
+      link.resolve email
+    , (error) ->
+      if error is 'no_matching_email' || error is '404'
+        setTimeout ->
+          link.resolve get_content(handle, subject, contains_text, attempts)
+        , 6000
+      else
+        link.reject error
+  else
+    link.reject 'max_email_fetch_attempts_reached'
+
+  return link.promise
 
 # helper functions
 get_link = (handle, subject, contains_text) ->
@@ -85,7 +103,7 @@ get_link_poll = (handle, subject, contains_text, attempts=0) ->
 
   attempts = attempts + 1
 
-  if attempts < 10
+  if attempts < 15
     get_link(handle, subject, contains_text)
     .then (email) ->
       link.resolve email
